@@ -6,8 +6,8 @@ const pathname = Astro.url.pathname;
   <nav>
     <div class="prompt">
       [muhaiman@devsafar ~]$
-      {pathname === '/' && <span></span>}
-      {pathname.startsWith('/blog') && <span>cd content/posts </span>}
+      {pathname === '/blog' && <span>ls -la ./writing </span>}
+      {pathname.startsWith('/blog/') && <span>cd content/posts </span>}
       {pathname === '/about' && <span>whoami </span>}
       <span class="blink">_</span>
     </div>
