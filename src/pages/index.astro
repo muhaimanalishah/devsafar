@@ -21,12 +21,13 @@ const posts = (await getCollection('blog'))
     <Header />
     <main>
       <div class="hero">
-        <div class="massive-text">SAFAR</div>
+        <div class="massive-text safar-text">SAFAR</div>
+        <div class="massive-text panic-text">PANIC<br />STATE</div>
         <div class="content">
-          <div class="tag">index.js</div>
+          <div class="hero-tag">index.js</div>
           <h1>building.<br />breaking.<br />learning.</h1>
           <p>writing code and fixing bugs. this is my space to document the process and share what i learn along the way.</p>
-          <div class="cmd">> npm run dev</div>
+          <div class="cmd">{'>'} npm run dev</div>
         </div>
       </div>
 
@@ -38,6 +39,7 @@ const posts = (await getCollection('blog'))
             return (
               <a href={`/blog/${post.id}`} class="log-row">
                 <div class="log-date">{date}</div>
+                <div class={`tag ${post.data.tag ?? ''}`}>{post.data.tag ?? ''}</div>
                 <div class="log-title">{post.data.title}</div>
                 <div class="log-read">[ read ]</div>
               </a>
@@ -69,12 +71,19 @@ const posts = (await getCollection('blog'))
     -webkit-text-stroke: 1px rgba(255,255,255,0.05);
     line-height: 0.8;
     letter-spacing: -0.05em;
-    top: 20%; left: -2%;
+    z-index: 1;
     user-select: none;
     pointer-events: none;
   }
+  .safar-text { top: 20%; left: -2%; }
+  .panic-text {
+    top: 15%;
+    left: -5%;
+    font-size: 22vw;
+    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.07);
+  }
   .content { position: relative; z-index: 2; max-width: 600px; }
-  .tag {
+  .hero-tag {
     display: inline-block;
     background: var(--neon);
     color: var(--bg);
@@ -83,9 +92,12 @@ const posts = (await getCollection('blog'))
     font-weight: 800;
     text-transform: uppercase;
     margin-bottom: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
   }
   h1 {
+    font-family: 'JetBrains Mono', monospace;
     font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 800;
     margin: 0 0 1.5rem 0;
     line-height: 1.1;
     text-transform: lowercase;
@@ -96,24 +108,39 @@ const posts = (await getCollection('blog'))
   .logs-section { padding: 5rem 5vw; border-top: 1px solid var(--border); }
   .section-title { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 3rem; }
 
+  .log-list { display: flex; flex-direction: column; }
   .log-row {
     display: grid;
-    grid-template-columns: 120px 1fr auto;
+    grid-template-columns: 120px 100px 1fr auto;
     gap: 2rem;
     padding: 1.5rem 0;
     border-bottom: 1px dashed var(--border);
     text-decoration: none;
     color: var(--text);
     transition: all 0.2s;
+    align-items: center;
   }
-  .log-row:hover { border-bottom-color: var(--neon); padding-left: 1rem; }
+  .log-row:hover { border-bottom-color: var(--neon); padding-left: 1rem; background: rgba(255,255,255,0.02); }
   .log-date { color: var(--muted); font-size: 0.85rem; }
-  .log-title { font-weight: 700; text-transform: lowercase; }
+  .log-title { font-weight: 700; text-transform: lowercase; font-size: 1.1rem; }
   .log-read { color: var(--neon); font-size: 0.85rem; opacity: 0; transition: opacity 0.2s; }
   .log-row:hover .log-read { opacity: 1; }
 
+  .tag {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .tag.tutorial { background: var(--neon); color: var(--bg); }
+  .tag.article { background: var(--article); color: #fff; }
+
   @media (max-width: 800px) {
-    .log-row { grid-template-columns: 1fr; gap: 0.5rem; }
+    .log-row { grid-template-columns: 1fr; gap: 0.5rem; padding: 1.5rem 0; }
+    .log-date { order: 2; }
+    .tag { order: 1; width: fit-content; }
+    .log-title { order: 3; }
     .log-read { display: none; }
   }
 </style>

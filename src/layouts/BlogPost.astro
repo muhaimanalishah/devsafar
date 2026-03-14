@@ -21,19 +21,21 @@ const formattedDate = pubDate.toISOString().split('T')[0];
     <main>
       <aside class="toc">
         <div class="toc-title">./index</div>
-        <slot name="toc" />
+        <ul id="toc-list">
+          <slot name="toc" />
+        </ul>
       </aside>
 
       <article class="post-body">
         <header class="post-header">
           <div class="post-meta">
-            <span class={`tag ${tag}`}>{tag}</span>
+            {tag && <span class={`tag ${tag}`}>{tag}</span>}
             <span class="date">{formattedDate}</span>
           </div>
           <h1>{title}</h1>
           <p class="lead">{description}</p>
         </header>
-        <div class="post-content">
+        <div class="post-content" id="post-content">
           <slot />
         </div>
       </article>
@@ -42,14 +44,69 @@ const formattedDate = pubDate.toISOString().split('T')[0];
   </body>
 </html>
 
+<script>
+  // Build TOC from headings in post-content
+  const content = document.getElementById('post-content');
+  const tocList = document.getElementById('toc-list');
+
+  if (content && tocList) {
+    const headings = content.querySelectorAll('h2, h3');
+
+    if (headings.length > 0) {
+      tocList.innerHTML = '';
+      headings.forEach((heading, i) => {
+        // Ensure each heading has an id
+        if (!heading.id) {
+          heading.id = heading.textContent?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') ?? `heading-${i}`;
+        }
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `#${heading.id}`;
+        a.textContent = heading.textContent ?? '';
+        if (heading.tagName === 'H3') {
+          li.classList.add('toc-sub');
+        }
+        li.appendChild(a);
+        tocList.appendChild(li);
+      });
+    } else {
+      // Hide TOC if no headings
+      const tocAside = document.querySelector('.toc') as HTMLElement | null;
+      if (tocAside) tocAside.style.display = 'none';
+    }
+
+    // Scroll-spy: highlight active heading
+    const tocLinks = () => tocList.querySelectorAll('a');
+
+    const setActive = (id: string) => {
+      tocLinks().forEach(a => {
+        a.classList.toggle('active', (a as HTMLAnchorElement).getAttribute('href') === `#${id}`);
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActive(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -70% 0px', threshold: 0 }
+    );
+
+    headings.forEach(h => observer.observe(h));
+  }
+</script>
+
 <style>
   main {
     flex: 1;
     display: grid;
-    grid-template-columns: 250px 1fr;
+    grid-template-columns: 220px 1fr;
     gap: 4rem;
     padding: 4rem 5vw;
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
     width: 100%;
   }
@@ -67,6 +124,25 @@ const formattedDate = pubDate.toISOString().split('T')[0];
     font-weight: 700;
     letter-spacing: 0.1em;
   }
+  .toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .toc li { margin-bottom: 0.5rem; }
+  .toc li.toc-sub { padding-left: 1rem; }
+  .toc a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+  .toc a::before { content: "├── "; white-space: pre; color: var(--border); flex-shrink: 0; }
+  .toc li:last-child > a::before { content: "└── "; }
+  .toc a:hover, .toc a.active { color: var(--neon); }
+
   .post-meta {
     display: flex;
     align-items: center;
@@ -78,33 +154,48 @@ const formattedDate = pubDate.toISOString().split('T')[0];
     padding: 0.2rem 0.5rem;
     font-weight: 800;
     text-transform: uppercase;
+    font-size: 0.75rem;
   }
   .tag.tutorial { background: var(--neon); color: var(--bg); }
   .tag.article { background: var(--article); color: #fff; }
   .date { color: var(--muted); }
+
   h1 {
-    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 800;
     line-height: 1.1;
     margin-bottom: 1.5rem;
     text-transform: lowercase;
   }
   .lead {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #aaa;
     border-left: 2px solid var(--neon);
     padding-left: 1rem;
     margin-bottom: 3rem;
   }
   .post-content :global(h2) {
-    font-size: 1.5rem;
-    margin: 3rem 0 1rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 2.5rem 0 1rem;
     text-transform: lowercase;
     color: var(--text);
     display: flex;
     align-items: center;
+    gap: 0.5rem;
   }
   .post-content :global(h2)::before { content: "> "; color: var(--neon); }
-  .post-content :global(p) { margin-bottom: 1.5rem; color: #ccc; }
+  .post-content :global(h3) {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 2rem 0 0.75rem;
+    color: var(--text);
+  }
+  .post-content :global(p) { margin-bottom: 1.5rem; color: #ccc; line-height: 1.7; }
+  .post-content :global(a) { color: var(--neon); text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px; }
+  .post-content :global(ul), .post-content :global(ol) { padding-left: 1.5rem; margin-bottom: 1.5rem; color: #ccc; }
+  .post-content :global(li) { margin-bottom: 0.5rem; }
   .post-content :global(pre) {
     background: var(--code-bg);
     border: 1px solid var(--border);
@@ -117,6 +208,14 @@ const formattedDate = pubDate.toISOString().split('T')[0];
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.9rem;
   }
+  .post-content :global(blockquote) {
+    border-left: 2px solid var(--neon);
+    padding-left: 1rem;
+    color: #888;
+    font-style: italic;
+    margin: 2rem 0;
+  }
+
   @media (max-width: 800px) {
     main { grid-template-columns: 1fr; padding: 2rem 5vw; }
     .toc { position: static; margin-bottom: 3rem; border-bottom: 1px dashed var(--border); padding-bottom: 2rem; }
