@@ -20,7 +20,7 @@ const posts = (await getCollection('blog')).sort(
     <div class="noise"></div>
     <Header />
     <main>
-      <h1>{'>'} archive.</h1>
+      <h1>archive.</h1>
       <div class="filters">
         <button class="filter-btn active" data-filter="all">all</button>
         <button class="filter-btn" data-filter="tutorial">tutorials</button>
@@ -83,6 +83,8 @@ const posts = (await getCollection('blog')).sort(
     margin-bottom: 2rem;
     text-transform: lowercase;
   }
+
+  main h1::before { content: "> "; color: var(--neon); }
 
   .filters {
     display: flex;
