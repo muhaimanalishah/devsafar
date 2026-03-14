@@ -66,34 +66,70 @@ const hasToc = headings.length > 0;
 </html>
 
 <script>
-  // Script is now ONLY responsible for the scroll-spy logic
+  // --- Scroll-spy logic for TOC ---
   const tocList = document.getElementById('toc-list');
-
   if (tocList) {
     const tocLinks = () => tocList.querySelectorAll('a');
-
     const setActive = (id: string) => {
       tocLinks().forEach(a => {
         a.classList.toggle('active', (a as HTMLAnchorElement).getAttribute('href') === `#${id}`);
       });
     };
 
-    // Grab all rendered headings inside the content
     const headings = document.querySelectorAll('.post-content h2, .post-content h3');
-    
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setActive(entry.target.id);
-          }
+          if (entry.isIntersecting) setActive(entry.target.id);
         });
       },
       { rootMargin: '0px 0px -70% 0px', threshold: 0 }
     );
-
     headings.forEach(h => observer.observe(h));
   }
+
+  // --- Code Block Enhancements (Language & Copy Button) ---
+  const codeBlocks = document.querySelectorAll('.post-content pre');
+  codeBlocks.forEach((pre) => {
+    // 1. Create a wrapper
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-wrapper';
+    pre.parentNode?.insertBefore(wrapper, pre);
+    wrapper.appendChild(pre);
+
+    // 2. Determine the language (Astro/Shiki usually sets data-language)
+    let lang = 'text';
+    if (pre.hasAttribute('data-language')) {
+      lang = pre.getAttribute('data-language') || 'text';
+    } else {
+      const classMatch = pre.className.match(/language-(\w+)/);
+      if (classMatch) lang = classMatch[1];
+    }
+
+    // 3. Create the header bar
+    const header = document.createElement('div');
+    header.className = 'code-header';
+
+    const langBadge = document.createElement('span');
+    langBadge.className = 'code-lang';
+    langBadge.innerText = lang;
+
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'code-copy-btn';
+    copyBtn.innerText = '[ copy ]';
+
+    // 4. Copy functionality
+    copyBtn.addEventListener('click', async () => {
+      const code = pre.querySelector('code')?.innerText || pre.innerText;
+      await navigator.clipboard.writeText(code);
+      copyBtn.innerText = '[ copied! ]';
+      setTimeout(() => copyBtn.innerText = '[ copy ]', 2000);
+    });
+
+    header.appendChild(langBadge);
+    header.appendChild(copyBtn);
+    wrapper.insertBefore(header, pre);
+  });
 </script>
 
 <style>
@@ -108,47 +144,36 @@ const hasToc = headings.length > 0;
   /* Grid for posts WITH a TOC */
   .has-toc {
     display: grid;
-    grid-template-columns: 220px 1fr;
+    /* FIX: minmax(0, 1fr) prevents wide code blocks/images from blowing out the grid width */
+    grid-template-columns: 220px minmax(0, 1fr); 
     gap: 4rem;
-    max-width: 1000px;
+    max-width: 1050px; /* Slightly wider to give content room to breathe */
   }
 
-  /* Narrower column for posts WITHOUT a TOC */
+  /* Column for posts WITHOUT a TOC */
   .no-toc {
     display: flex;
     flex-direction: column;
-    max-width: 760px; /* Optimal reading width */
+    max-width: 800px; /* Increased from 760px for a slightly looser fit */
   }
 
-  /* Breadcrumbs */
-  .breadcrumbs {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-bottom: 3rem;
-    display: flex;
-    gap: 0.5rem;
+  /* Fix for content overflow */
+  .post-body {
+    min-width: 0; 
   }
+
+  /* Breadcrumbs & TOC Styles */
+  .breadcrumbs { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--muted); margin-bottom: 3rem; display: flex; gap: 0.5rem; }
   .breadcrumbs a { color: var(--neon); text-decoration: none; }
   .breadcrumbs a:hover { text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px; }
   .breadcrumbs .current { color: var(--text); }
-
-  /* TOC Styles */
-  .toc {
-    position: sticky;
-    top: 6rem;
-    height: fit-content;
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
+  
+  .toc { position: sticky; top: 6rem; height: fit-content; font-size: 0.85rem; color: var(--muted); }
   .toc-title { color: var(--text); margin-bottom: 1rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.1em; }
   .toc ul { list-style: none; padding: 0; margin: 0; }
   .toc li { margin-bottom: 0.5rem; }
   .toc li.toc-sub { padding-left: 1rem; }
-  .toc a {
-    color: var(--muted); text-decoration: none; transition: color 0.2s;
-    display: flex; align-items: flex-start; gap: 0.4rem;
-  }
+  .toc a { color: var(--muted); text-decoration: none; transition: color 0.2s; display: flex; align-items: flex-start; gap: 0.4rem; }
   .toc a::before { content: "├── "; white-space: pre; color: var(--border); flex-shrink: 0; }
   .toc li:last-child > a::before { content: "└── "; }
   .toc a:hover, .toc a.active { color: var(--neon); }
@@ -172,10 +197,24 @@ const hasToc = headings.length > 0;
   .post-content :global(a) { color: var(--neon); text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px; }
   .post-content :global(ul), .post-content :global(ol) { padding-left: 1.5rem; margin-bottom: 1.5rem; }
   .post-content :global(li) { margin-bottom: 0.5rem; }
-  .post-content :global(pre) { background: var(--code-bg); border: 1px solid var(--border); padding: 1.5rem; border-radius: 4px; overflow-x: auto; margin: 2rem 0; }
-  .post-content :global(code) { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
   .post-content :global(blockquote) { border-left: 2px solid var(--neon); padding-left: 1rem; color: #888; font-style: italic; margin: 2rem 0; }
   .post-content :global(img) { max-width: 100%; height: auto; border: 1px solid var(--border); margin: 2rem 0; display: block; }
+
+  /* --- Tables Styling Fix --- */
+  .post-content :global(table) { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.9rem; overflow-x: auto; display: block; }
+  .post-content :global(th), .post-content :global(td) { border: 1px solid var(--border); padding: 0.75rem 1rem; text-align: left; }
+  .post-content :global(th) { background: rgba(255, 255, 255, 0.03); color: var(--neon); font-family: 'JetBrains Mono', monospace; font-weight: bold; }
+
+  /* --- Custom Code Block Theme --- */
+  .post-content :global(.code-wrapper) { position: relative; margin: 2rem 0; border: 1px solid var(--border); border-radius: 4px; background: #0a0a0a; overflow: hidden; }
+  .post-content :global(.code-header) { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+  .post-content :global(.code-lang) { color: var(--muted); text-transform: uppercase; font-weight: bold; }
+  .post-content :global(.code-copy-btn) { background: none; border: none; color: var(--neon); cursor: pointer; font-family: inherit; font-size: 0.8rem; transition: opacity 0.2s; padding: 0; }
+  .post-content :global(.code-copy-btn:hover) { opacity: 0.7; }
+  
+  /* Overriding Astro's default inline pre styles */
+  .post-content :global(pre) { margin: 0 !important; padding: 1.5rem !important; background: transparent !important; border: none !important; overflow-x: auto; }
+  .post-content :global(code) { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
 
   @media (max-width: 800px) {
     .has-toc { grid-template-columns: 1fr; padding: 2rem 5vw; }

@@ -1,8 +1,8 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import '../styles/global.css';
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
 ---
 
 <!doctype html>
@@ -16,26 +16,75 @@ import '../styles/global.css';
     <main>
       <aside class="sys-info">
         <h2>./sys_specs</h2>
-        <div class="spec-row"><span class="spec-key">usr:</span><span class="spec-val">muhaiman ali shah</span></div>
-        <div class="spec-row"><span class="spec-key">loc:</span><span class="spec-val">pakistan</span></div>
-        <div class="spec-row"><span class="spec-key">stack:</span><span class="spec-val">js, next.js, tailwind</span></div>
-        <div class="spec-row"><span class="spec-key">os:</span><span class="spec-val">linux (mentally)</span></div>
-        <div class="spec-row"><span class="spec-key">status:</span><span class="spec-val">building devsafar</span></div>
+        <div class="spec-row">
+          <span class="spec-key">usr:</span><span class="spec-val"
+            >muhaiman ali shah</span
+          >
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">loc:</span><span class="spec-val"
+            >pakistan</span
+          >
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">stack:</span><span class="spec-val"
+            >js, next.js, tailwind</span
+          >
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">os:</span><span class="spec-val"
+            >linux (mentally)</span
+          >
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">status:</span><span class="spec-val"
+            >building devsafar</span
+          >
+        </div>
       </aside>
 
       <section class="bio-section">
         <h1>cat about.md</h1>
-        <p>i am a developer building out of pakistan. this space is my digital notebook, a public ledger of everything i am learning, breaking, and fixing.</p>
-        <div class="block-quote">"seekhte seekhte sikhana." <br />(teaching while still learning.)</div>
-        <p>if you are just starting out, maybe something in these logs will help you compile your own thoughts.</p>
+        <p>
+          i am a developer building out of pakistan. this space is my digital
+          notebook, a public ledger of everything i am learning, breaking, and
+          fixing.
+        </p>
+        <div class="block-quote">
+          "seekhte seekhte sikhana." <br />(teaching while still learning.)
+        </div>
+        <p>
+          if you are just starting out, maybe something in these logs will help
+          you compile your own thoughts.
+        </p>
         <div class="contact-cmds">
-          <div class="cmd-line"><span>// drop an email:</span> <a href="mailto:muhaiman@example.com">ping --mail muhaiman</a></div>
+          <div class="cmd-line">
+            <span>// drop an email:</span>
+            <a href="mailto:muhaiman@example.com">ping --mail muhaiman</a>
+            <button class="copy-email-btn" data-email="muhaiman@example.com"
+              >[ copy ]</button
+            >
+          </div>
         </div>
       </section>
     </main>
     <Footer />
   </body>
 </html>
+
+<script>
+  const copyBtn = document.querySelector('.copy-email-btn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const email = copyBtn.getAttribute('data-email');
+      if (email) {
+        await navigator.clipboard.writeText(email);
+        copyBtn.innerHTML = '[ copied! ]';
+        setTimeout(() => { copyBtn.innerHTML = '[ copy ]'; }, 2000);
+      }
+    });
+  }
+</script>
 
 <style>
   main {
@@ -52,23 +101,42 @@ import '../styles/global.css';
     border: 1px solid var(--border);
     padding: 2rem;
     height: fit-content;
-    background: rgba(255,255,255,0.01);
+    background: rgba(255, 255, 255, 0.01);
   }
-  .sys-info h2 { font-size: 1rem; color: var(--neon); margin-bottom: 1.5rem; }
-  .spec-row { display: grid; grid-template-columns: 80px 1fr; margin-bottom: 0.8rem; font-size: 0.85rem; }
-  .spec-key { color: var(--muted); }
-  .spec-val { color: var(--text); }
+  .sys-info h2 {
+    font-size: 1rem;
+    color: var(--neon);
+    margin-bottom: 1.5rem;
+  }
+  .spec-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    margin-bottom: 0.8rem;
+    font-size: 0.85rem;
+  }
+  .spec-key {
+    color: var(--muted);
+  }
+  .spec-val {
+    color: var(--text);
+  }
 
   .bio-section h1 {
     font-size: clamp(2rem, 4vw, 3.5rem);
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     font-weight: 800;
     margin-bottom: 2rem;
     text-transform: lowercase;
     white-space: nowrap;
   }
-  .bio-section h1::before { content: "> "; color: var(--neon); }
-  .bio-section p { color: #aaa; margin-bottom: 1.5rem; }
+  .bio-section h1::before {
+    content: "> ";
+    color: var(--neon);
+  }
+  .bio-section p {
+    color: #aaa;
+    margin-bottom: 1.5rem;
+  }
   .block-quote {
     border-left: 2px solid var(--neon);
     padding-left: 1.5rem;
@@ -76,15 +144,38 @@ import '../styles/global.css';
     font-style: italic;
     color: #888;
   }
-  .contact-cmds { margin-top: 4rem; padding-top: 2rem; border-top: 1px dashed var(--border); }
-  .cmd-line { font-size: 0.9rem; }
-  .cmd-line span { color: var(--muted); margin-right: 1rem; }
-  .cmd-line a { color: var(--neon); text-decoration: none; border-bottom: 1px dashed transparent; transition: border 0.2s; }
-  .cmd-line a:hover { border-bottom-color: var(--neon); }
+  .contact-cmds {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px dashed var(--border);
+  }
+  .cmd-line { font-size: 0.9rem; display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+  .copy-email-btn { background: none; border: none; color: var(--neon); cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; transition: opacity 0.2s; padding: 0; margin-left: 0.5rem; }
+  .copy-email-btn:hover { opacity: 0.7; }
+  .cmd-line span {
+    color: var(--muted);
+    margin-right: 1rem;
+  }
+  .cmd-line a {
+    color: var(--neon);
+    text-decoration: none;
+    border-bottom: 1px dashed transparent;
+    transition: border 0.2s;
+  }
+  .cmd-line a:hover {
+    border-bottom-color: var(--neon);
+  }
 
   @media (max-width: 800px) {
-    main { grid-template-columns: 1fr; gap: 3rem; }
-    .sys-info { order: 2; }
-    .bio-section { order: 1; }
+    main {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    .sys-info {
+      order: 2;
+    }
+    .bio-section {
+      order: 1;
+    }
   }
 </style>
