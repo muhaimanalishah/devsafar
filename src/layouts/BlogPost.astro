@@ -5,10 +5,14 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 
-type Props = CollectionEntry<'blog'>['data'];
-const { title, description, pubDate, tag } = Astro.props;
+// Accept headings as a prop
+type Props = CollectionEntry<'blog'>['data'] & { headings?: any[] };
+const { title, description, pubDate, tag, headings = [] } = Astro.props;
 
 const formattedDate = pubDate.toISOString().split('T')[0];
+
+// Check if we actually have headings to display
+const hasToc = headings.length > 0;
 ---
 
 <html lang="en">
@@ -18,15 +22,30 @@ const formattedDate = pubDate.toISOString().split('T')[0];
   <body>
     <div class="noise"></div>
     <Header />
-    <main>
-      <aside class="toc">
-        <div class="toc-title">./index</div>
-        <ul id="toc-list">
-          <slot name="toc" />
-        </ul>
-      </aside>
+    
+    <main class={hasToc ? 'post-container has-toc' : 'post-container no-toc'}>
+      
+      {hasToc && (
+        <aside class="toc">
+          <div class="toc-title">./index</div>
+          <ul id="toc-list">
+            {headings.filter((h: any) => h.depth <= 3).map((h: any) => (
+              <li class={h.depth === 3 ? 'toc-sub' : ''}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
 
       <article class="post-body">
+        
+        <nav class="breadcrumbs">
+          <a href="/blog">cd ../writing</a>
+          <span class="separator">/</span>
+          <span class="current">{title.toLowerCase()}</span>
+        </nav>
+
         <header class="post-header">
           <div class="post-meta">
             {tag && <span class={`tag ${tag}`}>{tag}</span>}
@@ -35,47 +54,22 @@ const formattedDate = pubDate.toISOString().split('T')[0];
           <h1>{title}</h1>
           <p class="lead">{description}</p>
         </header>
+        
         <div class="post-content" id="post-content">
           <slot />
         </div>
       </article>
+      
     </main>
     <Footer />
   </body>
 </html>
 
 <script>
-  // Build TOC from headings in post-content
-  const content = document.getElementById('post-content');
+  // Script is now ONLY responsible for the scroll-spy logic
   const tocList = document.getElementById('toc-list');
 
-  if (content && tocList) {
-    const headings = content.querySelectorAll('h2, h3');
-
-    if (headings.length > 0) {
-      tocList.innerHTML = '';
-      headings.forEach((heading, i) => {
-        // Ensure each heading has an id
-        if (!heading.id) {
-          heading.id = heading.textContent?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') ?? `heading-${i}`;
-        }
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = `#${heading.id}`;
-        a.textContent = heading.textContent ?? '';
-        if (heading.tagName === 'H3') {
-          li.classList.add('toc-sub');
-        }
-        li.appendChild(a);
-        tocList.appendChild(li);
-      });
-    } else {
-      // Hide TOC if no headings
-      const tocAside = document.querySelector('.toc') as HTMLElement | null;
-      if (tocAside) tocAside.style.display = 'none';
-    }
-
-    // Scroll-spy: highlight active heading
+  if (tocList) {
     const tocLinks = () => tocList.querySelectorAll('a');
 
     const setActive = (id: string) => {
@@ -84,6 +78,9 @@ const formattedDate = pubDate.toISOString().split('T')[0];
       });
     };
 
+    // Grab all rendered headings inside the content
+    const headings = document.querySelectorAll('.post-content h2, .post-content h3');
+    
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -100,16 +97,43 @@ const formattedDate = pubDate.toISOString().split('T')[0];
 </script>
 
 <style>
-  main {
+  /* Base Container */
+  .post-container {
     flex: 1;
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 4rem;
     padding: 4rem 5vw;
-    max-width: 900px;
     margin: 0 auto;
     width: 100%;
   }
+
+  /* Grid for posts WITH a TOC */
+  .has-toc {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 4rem;
+    max-width: 1000px;
+  }
+
+  /* Narrower column for posts WITHOUT a TOC */
+  .no-toc {
+    display: flex;
+    flex-direction: column;
+    max-width: 760px; /* Optimal reading width */
+  }
+
+  /* Breadcrumbs */
+  .breadcrumbs {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .breadcrumbs a { color: var(--neon); text-decoration: none; }
+  .breadcrumbs a:hover { text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px; }
+  .breadcrumbs .current { color: var(--text); }
+
+  /* TOC Styles */
   .toc {
     position: sticky;
     top: 6rem;
@@ -117,107 +141,44 @@ const formattedDate = pubDate.toISOString().split('T')[0];
     font-size: 0.85rem;
     color: var(--muted);
   }
-  .toc-title {
-    color: var(--text);
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-  }
-  .toc ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+  .toc-title { color: var(--text); margin-bottom: 1rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.1em; }
+  .toc ul { list-style: none; padding: 0; margin: 0; }
   .toc li { margin-bottom: 0.5rem; }
   .toc li.toc-sub { padding-left: 1rem; }
   .toc a {
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.2s;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.4rem;
+    color: var(--muted); text-decoration: none; transition: color 0.2s;
+    display: flex; align-items: flex-start; gap: 0.4rem;
   }
   .toc a::before { content: "├── "; white-space: pre; color: var(--border); flex-shrink: 0; }
   .toc li:last-child > a::before { content: "└── "; }
   .toc a:hover, .toc a.active { color: var(--neon); }
 
-  .post-meta {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    font-size: 0.85rem;
-  }
-  .tag {
-    padding: 0.2rem 0.5rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-  }
+  /* Meta & Tags */
+  .post-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; font-size: 0.85rem; }
+  .tag { padding: 0.2rem 0.5rem; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; }
   .tag.tutorial { background: var(--neon); color: var(--bg); }
   .tag.article { background: var(--article); color: #fff; }
   .date { color: var(--muted); }
 
-  h1 {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(1.8rem, 3.5vw, 3rem);
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-    text-transform: lowercase;
-  }
-  .lead {
-    font-size: 1rem;
-    color: #aaa;
-    border-left: 2px solid var(--neon);
-    padding-left: 1rem;
-    margin-bottom: 3rem;
-  }
-  .post-content :global(h2) {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin: 2.5rem 0 1rem;
-    text-transform: lowercase;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+  h1 { font-family: 'JetBrains Mono', monospace; font-size: clamp(1.8rem, 3.5vw, 3rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; text-transform: lowercase; }
+  .lead { font-size: 1rem; color: #aaa; border-left: 2px solid var(--neon); padding-left: 1rem; margin-bottom: 3rem; }
+
+  /* Global Content Resets */
+  .post-content { line-height: 1.7; color: #ccc; font-size: 1rem; }
+  .post-content :global(h2) { font-size: 1.3rem; font-weight: 700; margin: 2.5rem 0 1rem; text-transform: lowercase; color: var(--text); display: flex; align-items: center; gap: 0.5rem; }
   .post-content :global(h2)::before { content: "> "; color: var(--neon); }
-  .post-content :global(h3) {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 2rem 0 0.75rem;
-    color: var(--text);
-  }
-  .post-content :global(p) { margin-bottom: 1.5rem; color: #ccc; line-height: 1.7; }
+  .post-content :global(h3) { font-size: 1.1rem; font-weight: 700; margin: 2rem 0 0.75rem; color: var(--text); }
+  .post-content :global(p) { margin-bottom: 1.5rem; }
   .post-content :global(a) { color: var(--neon); text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px; }
-  .post-content :global(ul), .post-content :global(ol) { padding-left: 1.5rem; margin-bottom: 1.5rem; color: #ccc; }
+  .post-content :global(ul), .post-content :global(ol) { padding-left: 1.5rem; margin-bottom: 1.5rem; }
   .post-content :global(li) { margin-bottom: 0.5rem; }
-  .post-content :global(pre) {
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    padding: 1.5rem;
-    border-radius: 4px;
-    overflow-x: auto;
-    margin: 2rem 0;
-  }
-  .post-content :global(code) {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9rem;
-  }
-  .post-content :global(blockquote) {
-    border-left: 2px solid var(--neon);
-    padding-left: 1rem;
-    color: #888;
-    font-style: italic;
-    margin: 2rem 0;
-  }
+  .post-content :global(pre) { background: var(--code-bg); border: 1px solid var(--border); padding: 1.5rem; border-radius: 4px; overflow-x: auto; margin: 2rem 0; }
+  .post-content :global(code) { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+  .post-content :global(blockquote) { border-left: 2px solid var(--neon); padding-left: 1rem; color: #888; font-style: italic; margin: 2rem 0; }
+  .post-content :global(img) { max-width: 100%; height: auto; border: 1px solid var(--border); margin: 2rem 0; display: block; }
 
   @media (max-width: 800px) {
-    main { grid-template-columns: 1fr; padding: 2rem 5vw; }
+    .has-toc { grid-template-columns: 1fr; padding: 2rem 5vw; }
     .toc { position: static; margin-bottom: 3rem; border-bottom: 1px dashed var(--border); padding-bottom: 2rem; }
   }
 </style>
