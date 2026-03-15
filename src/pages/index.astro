@@ -109,7 +109,18 @@ const posts = (await getCollection('blog'))
   .hero {
     overflow: hidden;
   }
-
   .section-title { margin-bottom: 1rem; }
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  .safar-text {
+    font-size: 34vw;
+    top: 20%;
+    left: -3%;
+    width: 3ch;
+    word-break: break-all;
+  }
+  .hero {
+    overflow: hidden;
+  }
 }
 </style>
