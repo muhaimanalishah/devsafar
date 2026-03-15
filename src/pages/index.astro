@@ -104,4 +104,16 @@ const posts = (await getCollection('blog'))
 
   .logs-section { padding: 5rem 5vw; border-top: 1px solid var(--border); }
   .section-title { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 3rem; }
+  @media (max-width: 600px) {
+  .safar-text {
+    font-size: 52vw;
+    top: 10%;
+    left: -5%;
+    width: 2ch;
+    word-break: break-all;
+  }
+  .hero {
+    overflow: hidden;
+  }
+}
 </style>
