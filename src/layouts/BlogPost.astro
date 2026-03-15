@@ -120,7 +120,7 @@ const hasToc = headings.length > 0;
 
     // 4. Copy functionality
     copyBtn.addEventListener('click', async () => {
-      const code = pre.querySelector('code')?.innerText || pre.innerText;
+      const code = (pre.querySelector('code') as HTMLElement)?.innerText || (pre as HTMLElement).innerText;
       await navigator.clipboard.writeText(code);
       copyBtn.innerText = '[ copied! ]';
       setTimeout(() => copyBtn.innerText = '[ copy ]', 2000);
@@ -144,17 +144,16 @@ const hasToc = headings.length > 0;
   /* Grid for posts WITH a TOC */
   .has-toc {
     display: grid;
-    /* FIX: minmax(0, 1fr) prevents wide code blocks/images from blowing out the grid width */
     grid-template-columns: 220px minmax(0, 1fr); 
     gap: 4rem;
-    max-width: 1050px; /* Slightly wider to give content room to breathe */
+    max-width: 1150px;
   }
 
   /* Column for posts WITHOUT a TOC */
   .no-toc {
     display: flex;
     flex-direction: column;
-    max-width: 800px; /* Increased from 760px for a slightly looser fit */
+    max-width: 900px;
   }
 
   /* Fix for content overflow */
@@ -214,6 +213,10 @@ const hasToc = headings.length > 0;
   
   /* Overriding Astro's default inline pre styles */
   .post-content :global(pre) { margin: 0 !important; padding: 1.5rem !important; background: transparent !important; border: none !important; overflow-x: auto; }
+  .post-content :global(pre)::-webkit-scrollbar { height: 4px; }
+  .post-content :global(pre)::-webkit-scrollbar-track { background: transparent; }
+  .post-content :global(pre)::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .post-content :global(pre)::-webkit-scrollbar-thumb:hover { background: var(--muted); }
   .post-content :global(code) { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
 
   @media (max-width: 800px) {
