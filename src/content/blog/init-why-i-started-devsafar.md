@@ -1,7 +1,7 @@
 ---
 title: 'init: why i started devsafar'
 description: 'why this blog exists'
-pubDate: 'Mar 16 2025'
+pubDate: 'Mar 16 2026'
 tag: 'article'
 ---
 
