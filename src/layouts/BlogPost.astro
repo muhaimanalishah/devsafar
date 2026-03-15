@@ -250,7 +250,14 @@ const hasToc = headings.length > 0;
   }
 
   @media (max-width: 800px) {
-    .has-toc { grid-template-columns: 1fr; padding: 2rem 5vw; }
-    .toc { position: static; margin-bottom: 3rem; border-bottom: 1px dashed var(--border); padding-bottom: 2rem; }
+  .has-toc {
+    grid-template-columns: 1fr;
   }
+  .toc {
+    display: none;
+  }
+  .post-container {
+    padding: 2rem 5vw;
+  }
+}
 </style>
