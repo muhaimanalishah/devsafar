@@ -11,13 +11,12 @@ const { title, description, pubDate, tag, headings = [] } = Astro.props;
 
 const formattedDate = pubDate.toISOString().split('T')[0];
 
-// Check if we actually have headings to display
 const hasToc = headings.length > 0;
 ---
 
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description} />
+    <BaseHead title={title} description={description} type="article" />
   </head>
   <body>
     <div class="noise"></div>
@@ -200,7 +199,6 @@ const hasToc = headings.length > 0;
   gap: 0.5rem; 
 }
 .post-content :global(h2)::before { content: "> "; color: var(--neon); }
-  .post-content :global(h2)::before { content: "> "; color: var(--neon); }
   .post-content :global(h3) { 
   font-size: 1.1rem; 
   font-weight: 700; 

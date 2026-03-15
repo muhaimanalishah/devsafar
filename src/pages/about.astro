@@ -3,12 +3,13 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+import { AUTHOR_NAME_FULL, AUTHOR_NAME, AUTHOR_EMAIL, SOCIALS } from "../consts.ts";
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title="About" description="whoami" />
+    <BaseHead title="about" description="self-taught web developer from pakistan, building in public at devsafar." />
   </head>
   <body>
     <div class="noise"></div>
@@ -17,53 +18,71 @@ import "../styles/global.css";
       <aside class="sys-info">
         <h2>./sys_specs</h2>
         <div class="spec-row">
-          <span class="spec-key">usr:</span><span class="spec-val"
-            >muhaiman ali shah</span
-          >
+          <span class="spec-key">usr:</span><span class="spec-val">{AUTHOR_NAME_FULL}</span>
         </div>
         <div class="spec-row">
-          <span class="spec-key">loc:</span><span class="spec-val"
-            >pakistan</span
-          >
+          <span class="spec-key">alias:</span><span class="spec-val">devsafar</span>
         </div>
         <div class="spec-row">
-          <span class="spec-key">stack:</span><span class="spec-val"
-            >js, next.js, tailwind</span
-          >
+          <span class="spec-key">loc:</span><span class="spec-val">pakistan</span>
         </div>
         <div class="spec-row">
-          <span class="spec-key">os:</span><span class="spec-val"
-            >linux (mentally)</span
-          >
+          <span class="spec-key">os:</span><span class="spec-val">arch linux (btw)</span>
         </div>
         <div class="spec-row">
-          <span class="spec-key">status:</span><span class="spec-val"
-            >building devsafar</span
-          >
+          <span class="spec-key">stack:</span><span class="spec-val">web_technologies</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">status:</span><span class="spec-val">bridging_the_gap</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">v:</span><span class="spec-val">0.1.0-alpha</span>
         </div>
       </aside>
 
       <section class="bio-section">
         <h1>cat about.md</h1>
         <p>
-          i am a developer building out of pakistan. this space is my digital
-          notebook, a public ledger of everything i am learning, breaking, and
-          fixing.
+          i am a developer building out of pakistan. this space, <strong>devsafar</strong>, 
+          is my digital notebook—a public ledger of everything i am learning, 
+          breaking, and fixing in real-time.
         </p>
+
         <div class="block-quote">
-          "seekhte seekhte sikhana." <br />(teaching while still learning.)
+          "seekhte seekhte sikhana." <br />
+          (teaching while still learning.)
         </div>
+
         <p>
-          if you are just starting out, maybe something in these logs will help
-          you compile your own thoughts.
+          for many pakistani students, the barrier to entry in tech isn't a lack of 
+          talent, but a lack of relatable guidance. technical documentation often 
+          feels like a brick wall. my goal is to turn those walls into stepping 
+          stones. 
         </p>
+
+        <p>
+          <strong>devsafar</strong> is a portfolio project in itself—not a polished 
+          showcase, but a raw documentation of the <em>safar</em> (journey). i write 
+          about modern web technologies, open-source explorations, and the 
+          lessons learned from managing a temperamental arch linux setup.
+        </p>
+
+        <p>
+          if you are currently in your <code>init</code> phase, i hope these logs 
+          help you compile your own path. we are all just figuring it out, one 
+          <code>sudo</code> command at a time.
+        </p>
+
         <div class="contact-cmds">
           <div class="cmd-line">
             <span>// drop an email:</span>
-            <a href="mailto:muhaiman@example.com">ping --mail muhaiman</a>
-            <button class="copy-email-btn" data-email="muhaiman@example.com"
-              >[ copy ]</button
-            >
+            <a href={`mailto:${AUTHOR_EMAIL}`}>ping --mail {AUTHOR_NAME}</a>
+            <button class="copy-email-btn" data-email={AUTHOR_EMAIL}>[ copy ]</button>
+          </div>
+          <div class="cmd-line">
+            <span>// connect on socials:</span>
+            <a href={SOCIALS.github} target="_blank" rel="noopener noreferrer">github</a>
+            <a href={SOCIALS.x} target="_blank" rel="noopener noreferrer">x</a>
           </div>
         </div>
       </section>
@@ -89,9 +108,9 @@ import "../styles/global.css";
 <style>
   main {
     flex: 1;
-    padding: 5rem 5vw;
-    max-width: 1000px;
+    padding: 4rem 5vw;
     margin: 0 auto;
+    max-width: 1150px;
     display: grid;
     grid-template-columns: 350px 1fr;
     gap: 4rem;

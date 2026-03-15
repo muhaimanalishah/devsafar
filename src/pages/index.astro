@@ -3,7 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import PostLog from '../components/PostLog.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
 
@@ -15,7 +15,7 @@ const posts = (await getCollection('blog'))
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <BaseHead title={"home"} description={SITE_DESCRIPTION} />
   </head>
   <body>
     <div class="noise" aria-hidden="true"></div>
@@ -24,10 +24,10 @@ const posts = (await getCollection('blog'))
       <div class="hero">
         <div class="massive-text safar-text">SAFAR</div>
         <div class="content">
-          <div class="hero-tag">index.js</div>
-          <h1>building.<br />breaking.<br />learning.</h1>
-          <p>writing code and fixing bugs. this is my space to document the process and share what i learn along the way.</p>
-          <div class="cmd">{'>'} npm run dev</div>
+          <div class="hero-tag">on_the_road.sh</div>
+          <h1>start.<br />safar.<br />repeat.</h1>
+          <p>capturing the chaos of modern web development and translating it into lessons. seekhte seekhte sikhana—teaching while still learning.</p>
+          <div class="cmd">{'>'} git switch -b learning</div>
         </div>
       </div>
 
