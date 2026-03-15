@@ -29,7 +29,7 @@ const hasToc = headings.length > 0;
         <aside class="toc">
           <div class="toc-title">./index</div>
           <ul id="toc-list">
-            {headings.filter((h: any) => h.depth <= 3).map((h: any) => (
+            {headings.filter((h: any) => h.depth >= 2 && h.depth <= 3).map((h: any) => (
               <li class={h.depth === 3 ? 'toc-sub' : ''}>
                 <a href={`#${h.slug}`}>{h.text}</a>
               </li>
@@ -189,9 +189,34 @@ const hasToc = headings.length > 0;
 
   /* Global Content Resets */
   .post-content { line-height: 1.7; color: #ccc; font-size: 1rem; }
-  .post-content :global(h2) { font-size: 1.3rem; font-weight: 700; margin: 2.5rem 0 1rem; text-transform: lowercase; color: var(--text); display: flex; align-items: center; gap: 0.5rem; }
+  .post-content :global(h2) { 
+  font-size: 1.4rem;  /* up from 1.3rem */
+  font-weight: 700; 
+  margin: 3rem 0 1rem;
+  text-transform: lowercase; 
+  color: var(--text); 
+  display: flex; 
+  align-items: center; 
+  gap: 0.5rem; 
+}
+.post-content :global(h2)::before { content: "> "; color: var(--neon); }
   .post-content :global(h2)::before { content: "> "; color: var(--neon); }
-  .post-content :global(h3) { font-size: 1.1rem; font-weight: 700; margin: 2rem 0 0.75rem; color: var(--text); }
+  .post-content :global(h3) { 
+  font-size: 1.1rem; 
+  font-weight: 700; 
+  margin: 1.5rem 0 0.75rem; 
+  color: var(--text);
+}
+
+.post-content :global(h4) { 
+  font-size: 0.95rem; 
+  font-weight: 700; 
+  margin: 1rem 0 0.5rem; 
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+  .post-content :global(h5), .post-content :global(h6) { font-size: 0.9rem; font-weight: 700; margin: 1rem 0 0.5rem; color: var(--muted); }
   .post-content :global(p) { margin-bottom: 1.5rem; }
   .post-content :global(a) { color: var(--neon); text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px; }
   .post-content :global(ul), .post-content :global(ol) { padding-left: 1.5rem; margin-bottom: 1.5rem; }
@@ -217,7 +242,12 @@ const hasToc = headings.length > 0;
   .post-content :global(pre)::-webkit-scrollbar-track { background: transparent; }
   .post-content :global(pre)::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
   .post-content :global(pre)::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-  .post-content :global(code) { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+  .post-content :global(:not(pre) > code) {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    color: var(--neon);
+  }
 
   @media (max-width: 800px) {
     .has-toc { grid-template-columns: 1fr; padding: 2rem 5vw; }
