@@ -2,7 +2,7 @@
 title: 'init: why i started devsafar'
 description: 'why this blog exists'
 pubDate: 'Mar 16 2025'
-tag: 'personal'
+tag: 'article'
 ---
 
 people ask me things. what to learn first. what to skip. what comes after this. where to even go.
