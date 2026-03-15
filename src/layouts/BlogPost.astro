@@ -258,4 +258,11 @@ const hasToc = headings.length > 0;
     padding: 2rem 5vw;
   }
 }
+
+@media (min-width: 801px) and (max-width: 1024px) {
+  .has-toc {
+    grid-template-columns: 160px minmax(0, 1fr);
+    gap: 2rem;
+  }
+}
 </style>
