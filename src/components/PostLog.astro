@@ -1,6 +1,6 @@
 ---
-    const { id, date, tag, title } = Astro.props;
-    const tagLower = tag?.toLowerCase() ?? '';
+const { id, date, tag, title } = Astro.props;
+const tagLower = tag?.toLowerCase() ?? '';
 ---
 
 <a href={`/blog/${id}`} class="log-row" data-tag={tagLower}>

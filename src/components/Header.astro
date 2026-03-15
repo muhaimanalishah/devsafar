@@ -6,17 +6,17 @@ const pathname = Astro.url.pathname;
   <nav>
     <div class="prompt">
       [muhaiman@devsafar]$
-      {pathname === "/blog" && <span>ls -la ./archive </span>}
-      {pathname.startsWith("/blog/") && <span>cd content/posts </span>}
-      {pathname === "/about" && <span>whoami </span>}
+      {pathname === '/blog' && <span>ls -la ./archive </span>}
+      {pathname.startsWith('/blog/') && <span>cd content/posts </span>}
+      {pathname === '/about' && <span>whoami </span>}
       <span class="blink">_</span>
     </div>
     <div class="links">
-      <a href="/" class={pathname === "/" ? "active" : ""}>home</a>
-      <a href="/blog" class={pathname.startsWith("/blog") ? "active" : ""}
+      <a href="/" class={pathname === '/' ? 'active' : ''}>home</a>
+      <a href="/blog" class={pathname.startsWith('/blog') ? 'active' : ''}
         >archive</a
       >
-      <a href="/about" class={pathname === "/about" ? "active" : ""}>about</a>
+      <a href="/about" class={pathname === '/about' ? 'active' : ''}>about</a>
     </div>
   </nav>
 </header>
@@ -24,17 +24,17 @@ const pathname = Astro.url.pathname;
 <script>
   let lastY = 0;
   let delta = 0;
-  const header = document.querySelector("header");
+  const header = document.querySelector('header');
 
-  window.addEventListener("scroll", () => {
+  window.addEventListener('scroll', () => {
     const currentY = window.scrollY;
     delta += lastY - currentY;
 
     if (currentY > lastY && currentY > 100) {
-      header?.classList.add("hidden");
+      header?.classList.add('hidden');
       delta = 0;
     } else if (delta > 10) {
-      header?.classList.remove("hidden");
+      header?.classList.remove('hidden');
       delta = 0;
     }
 

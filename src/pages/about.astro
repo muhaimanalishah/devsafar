@@ -1,15 +1,23 @@
 ---
-import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import "../styles/global.css";
-import { AUTHOR_NAME_FULL, AUTHOR_NAME, AUTHOR_EMAIL, SOCIALS } from "../consts.ts";
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import {
+  AUTHOR_NAME_FULL,
+  AUTHOR_NAME,
+  AUTHOR_EMAIL,
+  SOCIALS,
+} from '../consts.ts';
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title="about" description="self-taught web developer from pakistan, building in public at devsafar." />
+    <BaseHead
+      title="about"
+      description="self-taught web developer from pakistan, building in public at devsafar."
+    />
   </head>
   <body>
     <div class="noise"></div>
@@ -18,33 +26,48 @@ import { AUTHOR_NAME_FULL, AUTHOR_NAME, AUTHOR_EMAIL, SOCIALS } from "../consts.
       <aside class="sys-info">
         <h2>./sys_specs</h2>
         <div class="spec-row">
-          <span class="spec-key">usr:</span><span class="spec-val">{AUTHOR_NAME_FULL}</span>
+          <span class="spec-key">usr:</span><span class="spec-val"
+            >{AUTHOR_NAME_FULL}</span
+          >
         </div>
         <div class="spec-row">
-          <span class="spec-key">alias:</span><span class="spec-val">devsafar</span>
+          <span class="spec-key">alias:</span><span class="spec-val"
+            >devsafar</span
+          >
         </div>
         <div class="spec-row">
-          <span class="spec-key">loc:</span><span class="spec-val">pakistan</span>
+          <span class="spec-key">loc:</span><span class="spec-val"
+            >pakistan</span
+          >
         </div>
         <div class="spec-row">
-          <span class="spec-key">os:</span><span class="spec-val">arch linux (btw)</span>
+          <span class="spec-key">os:</span><span class="spec-val"
+            >arch linux (btw)</span
+          >
         </div>
         <div class="spec-row">
-          <span class="spec-key">stack:</span><span class="spec-val">web_technologies</span>
+          <span class="spec-key">stack:</span><span class="spec-val"
+            >web_technologies</span
+          >
         </div>
         <div class="spec-row">
-          <span class="spec-key">status:</span><span class="spec-val">bridging_the_gap</span>
+          <span class="spec-key">status:</span><span class="spec-val"
+            >bridging_the_gap</span
+          >
         </div>
         <div class="spec-row">
-          <span class="spec-key">v:</span><span class="spec-val">0.1.0-alpha</span>
+          <span class="spec-key">v:</span><span class="spec-val"
+            >0.1.0-alpha</span
+          >
         </div>
       </aside>
 
       <section class="bio-section">
         <h1>cat about.md</h1>
         <p>
-          i am a developer building out of pakistan. this space, <strong>devsafar</strong>, 
-          is my digital notebook—a public ledger of everything i am learning, 
+          i am a developer building out of pakistan. this space, <strong
+            >devsafar</strong
+          >, is my digital notebook—a public ledger of everything i am learning,
           breaking, and fixing in real-time.
         </p>
 
@@ -54,22 +77,22 @@ import { AUTHOR_NAME_FULL, AUTHOR_NAME, AUTHOR_EMAIL, SOCIALS } from "../consts.
         </div>
 
         <p>
-          for many pakistani students, the barrier to entry in tech isn't a lack of 
-          talent, but a lack of relatable guidance. technical documentation often 
-          feels like a brick wall. my goal is to turn those walls into stepping 
-          stones. 
+          for many pakistani students, the barrier to entry in tech isn't a lack
+          of talent, but a lack of relatable guidance. technical documentation
+          often feels like a brick wall. my goal is to turn those walls into
+          stepping stones.
         </p>
 
         <p>
-          <strong>devsafar</strong> is a portfolio project in itself—not a polished 
-          showcase, but a raw documentation of the <em>safar</em> (journey). i write 
-          about modern web technologies, open-source explorations, and the 
-          lessons learned from managing a temperamental arch linux setup.
+          <strong>devsafar</strong> is a portfolio project in itself—not a polished
+          showcase, but a raw documentation of the <em>safar</em> (journey). i write
+          about modern web technologies, open-source explorations, and the lessons
+          learned from managing a temperamental arch linux setup.
         </p>
 
         <p>
-          if you are currently in your <code>init</code> phase, i hope these logs 
-          help you compile your own path. we are all just figuring it out, one 
+          if you are currently in your <code>init</code> phase, i hope these logs
+          help you compile your own path. we are all just figuring it out, one
           <code>sudo</code> command at a time.
         </p>
 
@@ -77,11 +100,15 @@ import { AUTHOR_NAME_FULL, AUTHOR_NAME, AUTHOR_EMAIL, SOCIALS } from "../consts.
           <div class="cmd-line">
             <span>// drop an email:</span>
             <a href={`mailto:${AUTHOR_EMAIL}`}>ping --mail {AUTHOR_NAME}</a>
-            <button class="copy-email-btn" data-email={AUTHOR_EMAIL}>[ copy ]</button>
+            <button class="copy-email-btn" data-email={AUTHOR_EMAIL}
+              >[ copy ]</button
+            >
           </div>
           <div class="cmd-line">
             <span>// connect on socials:</span>
-            <a href={SOCIALS.github} target="_blank" rel="noopener noreferrer">github</a>
+            <a href={SOCIALS.github} target="_blank" rel="noopener noreferrer"
+              >github</a
+            >
             <a href={SOCIALS.x} target="_blank" rel="noopener noreferrer">x</a>
           </div>
         </div>
@@ -99,7 +126,9 @@ import { AUTHOR_NAME_FULL, AUTHOR_NAME, AUTHOR_EMAIL, SOCIALS } from "../consts.
       if (email) {
         await navigator.clipboard.writeText(email);
         copyBtn.innerHTML = '[ copied! ]';
-        setTimeout(() => { copyBtn.innerHTML = '[ copy ]'; }, 2000);
+        setTimeout(() => {
+          copyBtn.innerHTML = '[ copy ]';
+        }, 2000);
       }
     });
   }
@@ -142,14 +171,14 @@ import { AUTHOR_NAME_FULL, AUTHOR_NAME, AUTHOR_EMAIL, SOCIALS } from "../consts.
 
   .bio-section h1 {
     font-size: clamp(2rem, 4vw, 3.5rem);
-    font-family: "JetBrains Mono", monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-weight: 800;
     margin-bottom: 2rem;
     text-transform: lowercase;
     white-space: nowrap;
   }
   .bio-section h1::before {
-    content: "> ";
+    content: '> ';
     color: var(--neon);
   }
   .bio-section p {
@@ -168,9 +197,27 @@ import { AUTHOR_NAME_FULL, AUTHOR_NAME, AUTHOR_EMAIL, SOCIALS } from "../consts.
     padding-top: 2rem;
     border-top: 1px dashed var(--border);
   }
-  .cmd-line { font-size: 0.9rem; display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
-  .copy-email-btn { background: none; border: none; color: var(--neon); cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; transition: opacity 0.2s; padding: 0; margin-left: 0.5rem; }
-  .copy-email-btn:hover { opacity: 0.7; }
+  .cmd-line {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .copy-email-btn {
+    background: none;
+    border: none;
+    color: var(--neon);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    transition: opacity 0.2s;
+    padding: 0;
+    margin-left: 0.5rem;
+  }
+  .copy-email-btn:hover {
+    opacity: 0.7;
+  }
   .cmd-line span {
     color: var(--muted);
     margin-right: 1rem;
@@ -190,9 +237,9 @@ import { AUTHOR_NAME_FULL, AUTHOR_NAME, AUTHOR_EMAIL, SOCIALS } from "../consts.
   }
 
   @media (min-width: 801px) and (max-width: 1024px) {
-  main {
-    grid-template-columns: 260px 1fr;
-    gap: 2rem;
+    main {
+      grid-template-columns: 260px 1fr;
+      gap: 2rem;
+    }
   }
-}
 </style>

@@ -15,7 +15,7 @@ const posts = (await getCollection('blog'))
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={"home"} description={SITE_DESCRIPTION} />
+    <BaseHead title={'home'} description={SITE_DESCRIPTION} />
   </head>
   <body>
     <div class="noise" aria-hidden="true"></div>
@@ -26,7 +26,10 @@ const posts = (await getCollection('blog'))
         <div class="content">
           <div class="hero-tag">on_the_road.sh</div>
           <h1>start.<br />safar.<br />repeat.</h1>
-          <p>capturing the chaos of modern web development and translating it into lessons. seekhte seekhte sikhana—teaching while still learning.</p>
+          <p>
+            capturing the chaos of modern web development and translating it
+            into lessons. seekhte seekhte sikhana—teaching while still learning.
+          </p>
           <div class="cmd">{'>'} git switch -b learning</div>
         </div>
       </div>
@@ -34,12 +37,19 @@ const posts = (await getCollection('blog'))
       <section class="logs-section">
         <div class="section-title">./recent_logs</div>
         <div class="log-list">
-          {posts.map(post => {
-            const date = post.data.pubDate.toISOString().split('T')[0];
-            return (
-              <PostLog id={post.id} date={date} tag={post.data.tag} title={post.data.title} />
-            );
-          })}
+          {
+            posts.map((post) => {
+              const date = post.data.pubDate.toISOString().split('T')[0];
+              return (
+                <PostLog
+                  id={post.id}
+                  date={date}
+                  tag={post.data.tag}
+                  title={post.data.title}
+                />
+              );
+            })
+          }
         </div>
       </section>
     </main>
@@ -48,7 +58,9 @@ const posts = (await getCollection('blog'))
 </html>
 
 <style>
-  main { flex: 1; }
+  main {
+    flex: 1;
+  }
 
   .hero {
     position: relative;
@@ -63,17 +75,26 @@ const posts = (await getCollection('blog'))
     font-size: 20vw;
     font-weight: 800;
     color: transparent;
-    -webkit-text-stroke: 1px rgba(255,255,255,0.05);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.05);
     line-height: 0.8;
     letter-spacing: -0.05em;
     z-index: 1;
     user-select: none;
     pointer-events: none;
   }
-  .safar-text { top: 30%; left: -5%; font-size: 20vw;
-    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.07);}
+  .safar-text {
+    top: 30%;
+    left: -5%;
+    font-size: 20vw;
+    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.07);
+  }
 
-  .content { position: relative; z-index: 2; max-width: 600px; mix-blend-mode: difference;}
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    mix-blend-mode: difference;
+  }
   .hero-tag {
     display: inline-block;
     background: var(--neon);
@@ -93,34 +114,55 @@ const posts = (await getCollection('blog'))
     line-height: 1.1;
     text-transform: lowercase;
   }
-  p { font-size: 1rem; color: #aaa; border-left: 2px solid var(--neon); padding-left: 1rem; }
-  .cmd { margin-top: 1.5rem; display: inline-block; font-size: 0.9rem; color: var(--neon); }
+  p {
+    font-size: 1rem;
+    color: #aaa;
+    border-left: 2px solid var(--neon);
+    padding-left: 1rem;
+  }
+  .cmd {
+    margin-top: 1.5rem;
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--neon);
+  }
 
-  .logs-section { padding: 5rem 5vw; border-top: 1px solid var(--border); }
-  .section-title { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 3rem; }
+  .logs-section {
+    padding: 5rem 5vw;
+    border-top: 1px solid var(--border);
+  }
+  .section-title {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 3rem;
+  }
   @media (max-width: 600px) {
-  .safar-text {
-    font-size: 52vw;
-    top: 8%;
-    left: -5%;
-    width: 2ch;
-    word-break: break-all;
+    .safar-text {
+      font-size: 52vw;
+      top: 8%;
+      left: -5%;
+      width: 2ch;
+      word-break: break-all;
+    }
+    .hero {
+      overflow: hidden;
+    }
+    .section-title {
+      margin-bottom: 1rem;
+    }
   }
-  .hero {
-    overflow: hidden;
+  @media (min-width: 601px) and (max-width: 900px) {
+    .safar-text {
+      font-size: 34vw;
+      top: 20%;
+      left: -3%;
+      width: 3ch;
+      word-break: break-all;
+    }
+    .hero {
+      overflow: hidden;
+    }
   }
-  .section-title { margin-bottom: 1rem; }
-}
-@media (min-width: 601px) and (max-width: 900px) {
-  .safar-text {
-    font-size: 34vw;
-    top: 20%;
-    left: -3%;
-    width: 3ch;
-    word-break: break-all;
-  }
-  .hero {
-    overflow: hidden;
-  }
-}
 </style>
