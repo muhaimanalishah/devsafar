@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import PostLog from '../components/PostLog.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
@@ -35,15 +36,8 @@ const posts = (await getCollection('blog'))
         <div class="log-list">
           {posts.map(post => {
             const date = post.data.pubDate.toISOString().split('T')[0];
-            const tagLower = post.data.tag?.toLowerCase() ?? '';
             return (
-              <a href={`/blog/${post.id}`} class="log-row">
-                <div class="log-date">{date}</div>
-                <div class={`tag ${tagLower}`}>{tagLower}</div>
-                <div class="log-title">{post.data.title}</div>
-                <div class="log-read" aria-hidden="true">[ read ]</div>
-                <span class="sr-only">Read {post.data.title}</span>
-              </a>
+              <PostLog id={post.id} date={date} tag={post.data.tag} title={post.data.title} />
             );
           })}
         </div>
@@ -115,5 +109,7 @@ const posts = (await getCollection('blog'))
   .hero {
     overflow: hidden;
   }
+
+  .section-title { margin-bottom: 1rem; }
 }
 </style>

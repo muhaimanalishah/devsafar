@@ -1,0 +1,14 @@
+---
+    const { id, date, tag, title } = Astro.props;
+    const tagLower = tag?.toLowerCase() ?? '';
+---
+
+<a href={`/blog/${id}`} class="log-row" data-tag={tagLower}>
+  <div class="log-meta">
+    <div class={`tag ${tagLower}`}>{tagLower}</div>
+    <div class="log-date">{date}</div>
+  </div>
+  <div class="log-title">{title}</div>
+  <div class="log-read" aria-hidden="true">[ read ]</div>
+  <span class="sr-only">Read {title}</span>
+</a>
