@@ -28,6 +28,9 @@ const hasToc = headings.length > 0;
           <aside class="toc">
             <div class="toc-title">./index</div>
             <ul id="toc-list">
+              <li>
+                <a href="#post-title">{title}</a>
+              </li>
               {headings
                 .filter((h: any) => h.depth >= 2 && h.depth <= 3)
                 .map((h: any) => (
@@ -52,7 +55,7 @@ const hasToc = headings.length > 0;
             {tag && <span class={`tag ${tag}`}>{tag}</span>}
             <span class="date">{formattedDate}</span>
           </div>
-          <h1>{title}</h1>
+          <h1 id="post-title">{title}</h1>
           <p class="lead">{description}</p>
         </header>
 
@@ -80,7 +83,7 @@ const hasToc = headings.length > 0;
     };
 
     const headings = document.querySelectorAll(
-      '.post-content h2, .post-content h3',
+      '#post-title, .post-content h2, .post-content h3',
     );
     const observer = new IntersectionObserver(
       (entries) => {
